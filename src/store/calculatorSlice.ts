@@ -1,14 +1,13 @@
-import { createSlice, configureStore } from '@reduxjs/toolkit';
+import { createSlice, configureStore } from "@reduxjs/toolkit";
 
 export interface CalculatorState {
   operator: string | number | null;
   activeOperator: string | null;
   result: string | number;
-  digitalInMemory: any
-  digital: any
-  secondDigital: any
-  displayOver: boolean
-  showResult: boolean
+  digitalInMemory: number;
+  digital: any;
+  isMaxLengthDisplay: boolean;
+  showResult: boolean;
 }
 
 const initialState: CalculatorState = {
@@ -16,129 +15,113 @@ const initialState: CalculatorState = {
   activeOperator: null,
   result: 0,
   digitalInMemory: 0,
-  secondDigital: 0,
   digital: [],
-  displayOver: false,
-  showResult: false
+  isMaxLengthDisplay: false,
+  showResult: false,
 };
 
 const calculatorSlice = createSlice({
-  name: 'calculator',
+  name: "calculator",
   initialState,
   reducers: {
-    addDigital: (state, action) => {
-      state.showResult = false
-      if (String(state.digital).includes(".") && action.payload === ".") return
-
-if (state.result) {
-        
-        state.digital  =[]
-        
-        if (state.result === 'Не определено') {
-          state.digitalInMemory  = 0
-           
-        }
-        state.result = 0
-      }
-      if (state.digital.length === 16) {
-        if (state.displayOver) return
-        let dig = state.digital
-       
-        console.log(dig);
-        let temp
-        if (parseInt(dig[15]) >= 5) {
-          temp = parseInt(dig[15]) + 1
-        }
-        else {
-          temp = parseInt(dig[15])
-        }
-        console.log(temp);
-        dig.splice(15, 1, temp);
-         
-        state.digital = dig
-        state.displayOver = true
-        return
-      }
-      if (state.digital.length > 15) return
-      console.log(action.payload);
-     state.digital.push(action.payload)  
-       
+    deleteValue: (state ) => {
+      state.digital =[]
     },
-    addOperator: (state, action) => {
-      state.operator=action.payload
-      state.displayOver = false
-      if (!state.digitalInMemory) {
-        state.digitalInMemory=parseFloat(state.digital.join(""));
+    deletePrevItem: (state, action) => {
+      if(state.digital[action.payload ]){
+        state.digital.splice(action.payload , 1);
       }
      
-       state.digital=[]
+    },
+    addDigitalFromDisplay: (state, action) => {
+      state.digital = action.payload.split("");
+     
       
-   
+    }, 
+    deleteResult: (state ) => {
+      state.result = 0;
+     
+      
+    },
+    addDigital: (state, action) => {
+      state.showResult = false;
+      if (String(state.digital).includes(".") && action.payload === ".") return;
+      if (state.result) {
+        state.digital = [];
+        if (state.result === "Не определено") {
+          state.digitalInMemory = 0;
+        }
+        state.result = 0;
+      }
+      let temp;
+
+      if (state.digital.length === 16) {
+        if (state.isMaxLengthDisplay) return;
+        if (parseInt(state.digital[15]) >= 5) {
+          temp = parseInt(state.digital[15]) + 1;
+        } else {
+          temp = parseInt(state.digital[15]);
+        }
+        state.digital.splice(15, 1, temp);
+
+        state.isMaxLengthDisplay = true;
+        return;
+      }
+      if (state.digital.length > 15) return;
+
+      state.digital.push(action.payload);
+    },
+    addOperator: (state, action) => {
+      state.operator = action.payload;
+      state.isMaxLengthDisplay = false;
+      if (!state.digitalInMemory) {
+        state.digitalInMemory = parseFloat(state.digital.join(""));
+      }
+
+      state.digital = [];
     },
 
     calculateResult: (state) => {
-      state.showResult = true
-      // if(state.result ==='Не определено') {
-      //   state.digital=""
-      //  }  Math.round(sum * 100) / 100
+      state.showResult = true;
+
       switch (state.operator) {
-        case '+':
-          console.log(state.digitalInMemory);
-          console.log(parseFloat(state.digital.join("")));
-          state.result = Math.round((state.digitalInMemory + parseFloat(state.digital.join(""))) * 100) / 100
-
+        case "+":
+          state.result =
+            Math.round((state.digitalInMemory + parseFloat(state.digital.join(""))) * 100) / 100;
+          state.digitalInMemory = state.result;
           break;
-        case '-':
-          state.result = Math.round((state.digitalInMemory - parseFloat(state.digital.join(""))) * 100) / 100
+        case "-":
+          state.result =
+            Math.round((state.digitalInMemory - parseFloat(state.digital.join(""))) * 100) / 100;
+          state.digitalInMemory = state.result;
           break;
-        case 'X':
-          state.result = Math.round((state.digitalInMemory * parseFloat(state.digital.join(""))) * 100) / 100
+        case "X":
+          state.result =
+            Math.round(state.digitalInMemory * parseFloat(state.digital.join("")) * 100) / 100;
+          state.digitalInMemory = state.result;
           break;
-        case '/':
-          console.log(state.digital);
-
+        case "/":
           if (parseFloat(state.digital.join("")) === 0) {
-            state.result = 'Не определено'
-            state.digitalInMemory = 0
-            return
+            state.result = "Не определено";
+            state.digitalInMemory = 0;
+            return;
           }
-          state.result = Math.round((state.digitalInMemory / parseFloat(state.digital.join(""))) * 100) / 100
+          state.result =
+            Math.round((state.digitalInMemory / parseFloat(state.digital.join(""))) * 100) / 100;
+          state.digitalInMemory = state.result;
           break;
       }
-      
-      state.digitalInMemory = state.result
-      console.log(state.digitalInMemory);
-
-    }
-    // calculateResult: (state) => {
-    //   let result = 0;
-    //   let operator = '+';
-    //   state.operators.forEach((value) => {
-    //     if (isNaN(Number(value))) {
-    //       operator = value;
-    //     } else {
-    //       switch (operator) {
-    //         case '+':
-    //           result += Number(value);
-    //           break;
-    //         case '-':
-    //           result -= Number(value);
-    //           break;
-    //         case '*':
-    //           result *= Number(value);
-    //           break;
-    //         case '/':
-    //           result /= Number(value);
-    //           break;
-    //       }
-    //     }
-    //   });
-    //   state.result = result;
-    //   state.operators = [];
-    //   state.activeOperator = null;
-    // },
+    },
   },
 });
 
-export const { addOperator, calculateResult, addDigital } = calculatorSlice.actions;
-export default calculatorSlice.reducer
+export const {
+  addOperator,
+  calculateResult,
+  addDigital,
+  addDigitalFromDisplay,
+  deletePrevItem,
+  deleteValue,
+  deleteResult
+} = calculatorSlice.actions;
+export default calculatorSlice.reducer;

@@ -4,7 +4,7 @@ import { CalculatorElementWrapper } from '../../styledComponents';
 import { EqualsButtonStyle } from "./style";
 import { EqualsButtonProps } from "./types";
 
-const EqualsButton = ({isConstructor,isConstructorMode}:EqualsButtonProps) => {
+const EqualsButton = ({isConstructor,isConstructorMode,disabled}:EqualsButtonProps) => {
   const dispatch = useDispatch()
  
 const equalsHandler=( ) => {
@@ -13,7 +13,7 @@ dispatch(calculateResult(   ))
 }
   return (
     <CalculatorElementWrapper height={'72px'}>
-       <EqualsButtonStyle onClick={()=>{equalsHandler( )}} >=</EqualsButtonStyle>
+       <EqualsButtonStyle onClick={()=>{equalsHandler( )}} disabled={disabled}>=</EqualsButtonStyle>
         </CalculatorElementWrapper>
   );
 };

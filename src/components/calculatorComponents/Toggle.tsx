@@ -8,6 +8,7 @@ const ToggleWrapper = styled.div`
   border-radius: 6px;
   width: 243px;
   height: 38px;
+  margin-bottom:50px;
 `;
 const ToggleButton = styled.button<{ active: boolean }>`
   background: transparent;

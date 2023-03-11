@@ -1,13 +1,9 @@
-import { configureStore } from '@reduxjs/toolkit';
-import assemblySlice from './assemblySlice';
-import calculatorSlice from './calculatorSlice';
-import constructorSlice from './constructorSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import calculatorSlice from "./calculatorSlice";
 
 export const store = configureStore({
   reducer: {
-     calculatorSlice,
-     assemblySlice,
-     constructorSlice
+    calculatorSlice,
   },
 });
 

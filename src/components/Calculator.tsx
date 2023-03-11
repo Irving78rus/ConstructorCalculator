@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { ConstructorBlock } from "../App";
 import Land from "../icon/Land";
 import Line from "../icon/Line";
 
@@ -53,81 +54,79 @@ const Text = styled.p`
     color: #5d5fef;
   }
 `;
-const TextBlock = styled.p`
+const TextBlock = styled.span`
  margin-top:70%;
  svg{
   margin-left:50px;
  }
 `;
-
+interface CalculatorProps {
+  isConstructorMode: boolean;
+  usedElements: ConstructorBlock[] | []
+  setUsedElements: (usedElements: ConstructorBlock[] | []) => void;
+  currentItems: number | null;
+  arrForRender: ConstructorBlock[] | []
+  setArrForRender: (arrForRender: any) => void;
+}
 
 const Calculator = ({
   isConstructorMode,
-  constructorElems,
-  setConstructorElems,
+  usedElements,
+  setUsedElements,
   currentItems,
   arrForRender,
-  setarrForRender
-}: any) => {
-  const [dropItem, setdropItem] = useState<any>(null);
-  const [startItem, setStartItem] = useState<any>(null);
-  const [backDropZone, setBackDropZone] = useState<any>(false);
-  const onDropHandler = (e: any) => {
+  setArrForRender
+}: CalculatorProps) => {
+  const [dropItem, setDropItem] = useState<number | null>(null);
+  const [startItem, setStartItem] = useState<number | null>(null);
+  const [backDropZone, setBackDropZone] = useState<boolean>(false);
+  const onDropHandler = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setBackDropZone(false)
-    if (arrForRender.every((item: any) => item.id !== currentItems)) {
-      for (let i = 0; i < constructorElems.length; i++) {
-        if (constructorElems[i].id === currentItems) {
+
+    if (arrForRender.every((item: ConstructorBlock) => item.id !== currentItems)) {
+      for (let i = 0; i < usedElements.length; i++) {
+        if (usedElements[i].id === currentItems) {
 
           if (currentItems === 1) {
-            setarrForRender((prev: any) => [constructorElems[i], ...prev]);
+            setArrForRender((prev: ConstructorBlock[] | []) => [usedElements[i], ...prev]);
           } else {
-            setarrForRender((prev: any) => [...prev, constructorElems[i]]);
+            setArrForRender((prev: ConstructorBlock[] | []) => [...prev, usedElements[i]]);
           }
-          const newArr = [...constructorElems]
-          const index = newArr.findIndex((obj: any) => obj.id === currentItems);
+          const newArr = [...usedElements]
+          const index = newArr.findIndex((obj: ConstructorBlock) => obj.id === currentItems);
 
-          // Обновить поле name для найденного объекта
           newArr[index].use = true;
-          setConstructorElems(newArr)
+          setUsedElements(newArr)
         }
       }
     }
-
   };
 
-  const dragOverHandler = (e: any) => {
+  const dragOverHandler = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    
- 
-const children = e.target.childNodes
-for (let i = 0; i < children.length; i++) {
-  console.log(children[i].offsetTop,'chil');
-}
-const yCursor = e.pageY
-console.log(yCursor,'y');
-
- 
-
-    setBackDropZone(true)
+     setBackDropZone(true)
   };
-  const dragLeaveHandler = (e: any) => {
-    e.preventDefault();
 
+  const dragLeaveHandler = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
     setBackDropZone(false)
   };
-  const dragStartHandlerItem = (e: any, item: any) => {
-    setStartItem(item.id)
+
+  const dragStartHandlerItem = (id: number) => {
+    setStartItem(id)
   };
-  function insertAt(array: any, index: any, element: any) {
+
+  function insertAt(array: ConstructorBlock[], index: number, element: ConstructorBlock[]) {
     return [...array.slice(0, index), ...element, ...array.slice(index)];
   }
-  const onDropHandlerItem = (e: any, item: any) => {
+
+  const onDropHandlerItem = (e: React.DragEvent<HTMLDivElement>, item: ConstructorBlock) => {
     if (startItem === 1) return
     if (item.id === startItem) return
     const newArr = [...arrForRender];
-    const indexToRemove = newArr.findIndex((elem: any) => elem.id === startItem);
-    const indexToInsertAfter = newArr.findIndex((elem: any) => elem.id === item.id);
+    const indexToRemove = newArr.findIndex((elem: ConstructorBlock) => elem.id === startItem);
+    const indexToInsertAfter = newArr.findIndex((elem: ConstructorBlock) => elem.id === item.id);
     const removedElement = newArr.splice(indexToRemove, 1);
     let newArray = []
     if (indexToRemove < indexToInsertAfter) {
@@ -136,20 +135,19 @@ console.log(yCursor,'y');
     else {
       newArray = insertAt(newArr, indexToInsertAfter + 1, removedElement);
     }
-    setarrForRender(newArray);
-    setdropItem(null)
+    setArrForRender(newArray);
+    setDropItem(null)
   };
-  const dragLeaveHandlerItem = (e: any) => {
+  const dragLeaveHandlerItem = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setdropItem(null)
-
+    setDropItem(null)
   };
-  const dragEndHandlerItem = (e: any) => {
-    setdropItem(null)
+  const dragEndHandlerItem = (e: React.DragEvent<HTMLDivElement>) => {
+    setDropItem(null)
   };
-  const dragOverHandlerItem = (e: any, item: any) => {
+  const dragOverHandlerItem = (e: React.DragEvent<HTMLDivElement>, item: ConstructorBlock) => {
     e.preventDefault();
-    setdropItem(item.id)
+    setDropItem(item.id)
 
   };
   const calculatorWrapperStyle = () => {
@@ -160,32 +158,26 @@ console.log(yCursor,'y');
   return (
     <Wrapper>
       <CalculatorWrapper
-        onDragOver={(e: any) => dragOverHandler(e)}
-        onDrop={(e: any) => onDropHandler(e)}
-        onDragLeave={(e: any) => dragLeaveHandler(e)}
+        onDragOver={(e: React.DragEvent<HTMLDivElement>) => dragOverHandler(e)}
+        onDrop={(e: React.DragEvent<HTMLDivElement>) => onDropHandler(e)}
+        onDragLeave={(e: React.DragEvent<HTMLDivElement>) => dragLeaveHandler(e)}
         className={calculatorWrapperStyle()}
-
       >
-        {arrForRender.map((item: any) => {
+        {arrForRender.map((item: ConstructorBlock) => {
           const Component = item.elem
 
           return (
             <div
               key={item.id}
               draggable={!isConstructorMode || item.id === 1 ? false : true}
-              onDragOver={(e: any) => dragOverHandlerItem(e, item)}
-              onDrop={(e: any) => onDropHandlerItem(e, item)}
-              onDragStart={(e: any) => dragStartHandlerItem(e, item)}
-              onDragLeave={(e: any) => dragLeaveHandlerItem(e)}
-              onDragEnd={(e: any) => dragEndHandlerItem(e)}
-             
+              onDragOver={(e) => dragOverHandlerItem(e, item)}
+              onDrop={(e) => onDropHandlerItem(e, item)}
+              onDragStart={() => dragStartHandlerItem(item.id)}
+              onDragLeave={(e) => dragLeaveHandlerItem(e)}
+              onDragEnd={(e) => dragEndHandlerItem(e)}
             >
-              <div>  {<Component isConstructorMode={isConstructorMode} isConstructor={false} />}
-
-                {item.id === dropItem ? <Line ></Line> : null}
-
-              </div>
-
+              {<Component isConstructorMode={isConstructorMode} isConstructor={false} />}
+              {item.id === dropItem ? <Line ></Line> : null}
 
             </div>
           )
@@ -193,7 +185,7 @@ console.log(yCursor,'y');
 
         {arrForRender.length === 0 && (
           <TextBlock>
-            <Land  fill={backDropZone?'#C4C4C4':'#000000'} />
+            <Land fill={backDropZone ? '#C4C4C4' : '#000000'} />
             <Text>
               <span>Перетащите сюда</span> <br /> любой элемент <br />
               из левой панели

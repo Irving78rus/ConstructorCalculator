@@ -5,35 +5,36 @@ import Toggle from "./components/calculatorComponents/Toggle";
 import Constructor from "./components/Constructor";
 import DigitalButtons from "./components/constructorComponents/DigitalButtons/DigitalButtons";
 import Display from "./components/constructorComponents/Display/Display";
-import EqualsButton from "./components/constructorComponents/EqualsButton";
-import OperatorsButton from "./components/constructorComponents/OperatorsButton";
+import EqualsButton from "./components/constructorComponents/EqualsButton/EqualsButton";
+import OperatorsButton from "./components/constructorComponents/OperatorsButton/OperatorsButton";
+import { OperatorsButtonProps } from "./components/constructorComponents/OperatorsButton/types";
 
 const AppWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  border: 1px solid black;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 30px;
+  margin-top:30px;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 60px;
   height: 100%;
 `;
 const AppWrapper2 = styled.div`
-  display: flex;
+ 
   gap: 30px;
 `;
-const ConstructorWrapper = styled.div<{ children: any }>`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 240px;
-  height: 448px;
-  gap: 12px;
-`;
+ 
+export interface ConstructorBlock{
+ 
+    id: number;
+    elem: ({ isConstructor, isConstructorMode, disabled }: OperatorsButtonProps) => JSX.Element;
+    use: boolean;
+ 
+}
+
 const App: React.FC = () => {
-  const [currentItems, setСurrentItems] = useState(null);
-  const [arrForRender, setarrForRender] = useState<any>([]);
+  const [currentItems, setCurrentItems] = useState<null|number>(null);
+  const [arrForRender, setArrForRender] = useState<ConstructorBlock[]|[]>([]);
   const [isConstructorMode, setIsConstructorMode] = useState(true);
-  const [constructorElems, setConstructorElems] = useState([
+  const [usedElements, setUsedElements] = useState<ConstructorBlock[]>([
     {
       id: 1,
       elem: Display,
@@ -61,25 +62,26 @@ const App: React.FC = () => {
 
   return (
     <AppWrapper>
-      <Toggle isConstructorMode={isConstructorMode} setIsConstructorMode={setIsConstructorMode} />
-      <AppWrapper2>
-        <Constructor 
-        constructorElems={constructorElems}
+      <Constructor 
+        usedElements={usedElements}
         currentItems={currentItems}
-        setСurrentItems={setСurrentItems}
+        setCurrentItems={setCurrentItems}
         arrForRender={arrForRender}
         isConstructorMode={isConstructorMode}
         />
+      
+      <AppWrapper2>
+      <Toggle isConstructorMode={isConstructorMode} setIsConstructorMode={setIsConstructorMode} />
         
 
         <Calculator
           isConstructorMode={isConstructorMode}
-          constructorElems={constructorElems}
-          setConstructorElems={setConstructorElems}
+          usedElements={usedElements}
+          setUsedElements={setUsedElements}
           currentItems={currentItems}
-          setСurrentItems={setСurrentItems}
+          
           arrForRender={arrForRender}
-          setarrForRender={setarrForRender}
+          setArrForRender={setArrForRender}
         />
       </AppWrapper2>
     </AppWrapper>
