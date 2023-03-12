@@ -13,20 +13,20 @@ import { DisplayProps } from "./types";
 
 const Display = ({ isConstructorMode, isConstructor }: DisplayProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [position, setPosition] = useState<number>(0);
+  const [position, setPosition] = useState<number|null>(0);
   const displayValue = useSelector((state: stateModel) => state.calculatorSlice.digital);
   const result = useSelector((state: stateModel) => state.calculatorSlice.result);
   const showResult = useSelector((state: stateModel) => state.calculatorSlice.showResult);
    const dispatch = useDispatch();
 console.log(displayValue);
 
-  const valueHandler = (event: any) => {
-    const inputValue = event.target.value;
-    const formattedValue = inputValue.replace(/[^0-9.-]/g, "");
-    dispatch(addDigitalFromDisplay(formattedValue));
+  const valueHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const inputValue: string = event.target.value;
+    const formattedValue: string = inputValue.replace(/[^0-9.-]/g, "");
+     dispatch(addDigitalFromDisplay(formattedValue));
     setPosition(event.currentTarget.selectionStart);
   };
-  const deleteValueHandler = (e: any) => {
+  const deleteValueHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (result) {
       dispatch(deleteResult());
     }
@@ -39,7 +39,6 @@ console.log(displayValue);
           console.log(inputRef.current);
           inputRef.current.focus();
         }
-
         dispatch(deleteValue());
       }
     }
@@ -66,7 +65,7 @@ console.log(displayValue);
       <DisplayStl
         ref={inputRef}
         disabled={isConstructor ? true : false}
-        onChange={valueHandler}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{valueHandler(e)}}
         onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
           deleteValueHandler(e);
         }}

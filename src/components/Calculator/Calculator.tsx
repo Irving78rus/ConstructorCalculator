@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ConstructorBlock } from "../../App";
 import { insertByIndex } from "../../helpers/helpers";
 import Land from "../../icon/Land";

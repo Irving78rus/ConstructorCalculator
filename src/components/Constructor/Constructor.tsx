@@ -9,7 +9,6 @@ const Constructor = ({
   arrForRender,
 }: ConstructorProps) => {
   const dragStartHandler = (id: number) => {
-    
     setCurrentItems(id);
   };
 

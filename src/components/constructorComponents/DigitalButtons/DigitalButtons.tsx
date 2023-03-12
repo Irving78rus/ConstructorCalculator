@@ -3,8 +3,6 @@ import { addDigital } from "../../../store/calculatorSlice";
 import { CalculatorElementWrapper, OperatorsButtonStyled } from "../../shareStyle";
 import { DigitalButtonsProps } from "./types";
 
-
-
 const DigitalButtons = ({ isConstructor, isConstructorMode,disabled }: DigitalButtonsProps) => {
   const buttonsValue: (string | number)[] = [7, 8, 9, 4, 5, 6, 1, 2, 3, 0, "."];
   const dispatch = useDispatch()

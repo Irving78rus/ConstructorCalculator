@@ -1,12 +1,12 @@
-import { createSlice, configureStore } from "@reduxjs/toolkit";
-import { toFixedParam, validationAnswer } from "../helpers/helpers";
+import { createSlice} from "@reduxjs/toolkit";
+import { validationAnswer } from "../helpers/helpers";
 
 export interface CalculatorState {
   operator: string | number | null;
   activeOperator: string | null;
   result: string | number;
   digitalInMemory: number;
-  digital: any;
+  digital: string[];
   isMaxLengthDisplay: boolean;
   showResult: boolean;
 }
