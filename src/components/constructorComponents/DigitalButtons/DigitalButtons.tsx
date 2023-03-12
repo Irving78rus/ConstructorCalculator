@@ -1,6 +1,6 @@
 import { useDispatch} from "react-redux";
 import { addDigital } from "../../../store/calculatorSlice";
-import { CalculatorElementWrapper, OperatorsButtonStyled } from "../../styledComponents";
+import { CalculatorElementWrapper, OperatorsButtonStyled } from "../../shareStyle";
 import { DigitalButtonsProps } from "./types";
 
 

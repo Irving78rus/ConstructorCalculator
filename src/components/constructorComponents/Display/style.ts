@@ -9,7 +9,7 @@ interface ActiveDisplayStlProps {
     border-radius: 6px;
     height: 52px;
     width: 232px;
-    font-size: 36px;
+    font-size: 25px;
     font-weight: 800;
     text-align: right;
     border: none;

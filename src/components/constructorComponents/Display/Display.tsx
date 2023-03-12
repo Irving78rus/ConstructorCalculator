@@ -7,7 +7,7 @@ import {
   deleteResult,
 } from "../../../store/calculatorSlice";
 import { stateModel } from "../../../store/types";
-import { CalculatorElementWrapper } from "../../styledComponents";
+import { CalculatorElementWrapper } from "../../shareStyle";
 import { DisplayStl } from "./style";
 import { DisplayProps } from "./types";
 

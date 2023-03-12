@@ -1,6 +1,6 @@
 import { useDispatch} from "react-redux";
 import { addOperator} from "../../../store/calculatorSlice";
-import { CalculatorElementWrapper, OperatorsButtonStyled } from "../../styledComponents";
+import { CalculatorElementWrapper, OperatorsButtonStyled } from "../../shareStyle";
 import { OperatorsButtonProps } from "./types";
 
 const OperatorsButton = ({ isConstructor, isConstructorMode, disabled }: OperatorsButtonProps) => {

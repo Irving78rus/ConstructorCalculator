@@ -1,6 +1,6 @@
 import { useDispatch} from "react-redux";
 import { calculateResult } from "../../../store/calculatorSlice";
-import { CalculatorElementWrapper } from '../../styledComponents';
+import { CalculatorElementWrapper } from '../../shareStyle';
 import { EqualsButtonStyle } from "./style";
 import { EqualsButtonProps } from "./types";
 
