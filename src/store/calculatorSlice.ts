@@ -55,21 +55,23 @@ const calculatorSlice = createSlice({
       }
       let temp;
 
-      if (state.digital.length === 16) {
+      if (state.digital.length === 8) {
         if (state.isMaxLengthDisplay) return;
-        if (parseInt(state.digital[15]) >= 5) {
-          temp = parseInt(state.digital[15]) + 1;
+        if (parseInt(state.digital[7]) >= 5) {
+          temp = parseInt(state.digital[7]) + 1;
         } else {
-          temp = parseInt(state.digital[15]);
+          temp = parseInt(state.digital[7]);
         }
-        state.digital.splice(15, 1, temp);
+        state.digital.splice(7, 1, temp);
 
         state.isMaxLengthDisplay = true;
         return;
       }
-      if (state.digital.length > 15) return;
+      if (state.digital.length > 7) return;
 
       state.digital.push(action.payload);
+     
+      
     },
     addOperator: (state, action) => {
       state.operator = action.payload;

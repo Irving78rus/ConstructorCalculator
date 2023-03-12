@@ -121,7 +121,7 @@ const Calculator = ({
     return [...array.slice(0, index), ...element, ...array.slice(index)];
   }
 
-  const onDropHandlerItem = (e: React.DragEvent<HTMLDivElement>, item: ConstructorBlock) => {
+  const onDropHandlerItem = (item: ConstructorBlock) => {
     if (startItem === 1) return
     if (item.id === startItem) return
     const newArr = [...arrForRender];
@@ -142,7 +142,7 @@ const Calculator = ({
     e.preventDefault();
     setDropItem(null)
   };
-  const dragEndHandlerItem = (e: React.DragEvent<HTMLDivElement>) => {
+  const dragEndHandlerItem = () => {
     setDropItem(null)
   };
   const dragOverHandlerItem = (e: React.DragEvent<HTMLDivElement>, item: ConstructorBlock) => {
@@ -155,6 +155,31 @@ const Calculator = ({
     if (backDropZone) return 'active'
     return undefined
   }
+  const [elementUnderCursor, setElementUnderCursor] = useState<HTMLElement | null>(null);
+  const handleMouseEvent = (event: React.MouseEvent<HTMLDivElement>) => {
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+    const parentElement = event.currentTarget;
+    const childElements = parentElement.children;
+
+    for (let i = 0; i < childElements.length; i++) {
+      const childElement = childElements[i]  ;
+      const { left, top } = childElement.getBoundingClientRect();
+     
+    }
+  }
+  const handleDoubleClick = (id: number) => {
+    if(isConstructorMode){
+      const index = arrForRender.findIndex((element) => element.id === id);
+
+      if (index > -1) {
+        const newElements = [...arrForRender];
+        newElements.splice(index, 1);
+        setArrForRender(newElements);
+      }
+    }
+  
+  }
   return (
     <Wrapper>
       <CalculatorWrapper
@@ -162,6 +187,7 @@ const Calculator = ({
         onDrop={(e: React.DragEvent<HTMLDivElement>) => onDropHandler(e)}
         onDragLeave={(e: React.DragEvent<HTMLDivElement>) => dragLeaveHandler(e)}
         className={calculatorWrapperStyle()}
+        onMouseMove={(event: React.MouseEvent<HTMLDivElement>)=>{handleMouseEvent(event)}}
       >
         {arrForRender.map((item: ConstructorBlock) => {
           const Component = item.elem
@@ -171,10 +197,12 @@ const Calculator = ({
               key={item.id}
               draggable={!isConstructorMode || item.id === 1 ? false : true}
               onDragOver={(e) => dragOverHandlerItem(e, item)}
-              onDrop={(e) => onDropHandlerItem(e, item)}
+              onDrop={() => onDropHandlerItem(item)}
               onDragStart={() => dragStartHandlerItem(item.id)}
               onDragLeave={(e) => dragLeaveHandlerItem(e)}
-              onDragEnd={(e) => dragEndHandlerItem(e)}
+              onDragEnd={() => dragEndHandlerItem()}
+            
+              onDoubleClick={() => handleDoubleClick(item.id)}
             >
               {<Component isConstructorMode={isConstructorMode} isConstructor={false} />}
               {item.id === dropItem ? <Line ></Line> : null}

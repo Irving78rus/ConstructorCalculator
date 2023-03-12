@@ -17,61 +17,60 @@ const Display = ({ isConstructorMode, isConstructor }: DisplayProps) => {
   const displayValue = useSelector((state: stateModel) => state.calculatorSlice.digital);
   const result = useSelector((state: stateModel) => state.calculatorSlice.result);
   const showResult = useSelector((state: stateModel) => state.calculatorSlice.showResult);
-  const calculatorSlice = useSelector((state: stateModel) => state.calculatorSlice);
-  const dispatch = useDispatch();
+   const dispatch = useDispatch();
+console.log(displayValue);
 
-     
-  
   const valueHandler = (event: any) => {
-    dispatch(addDigitalFromDisplay(event.target.value));
+    const inputValue = event.target.value;
+    const formattedValue = inputValue.replace(/[^0-9.-]/g, "");
+    dispatch(addDigitalFromDisplay(formattedValue));
     setPosition(event.currentTarget.selectionStart);
-     
   };
   const deleteValueHandler = (e: any) => {
-    if(result){
+    if (result) {
       dispatch(deleteResult());
     }
-if(position!==0){
-  if (e.code === "Backspace") {
-    dispatch(deletePrevItem(position));
-  }
-  if (e.code === "Delete") {
-    if (inputRef.current) { 
-      console.log(inputRef.current);
-       inputRef.current.focus()
+    if (position !== 0) {
+      if (e.code === "Backspace") {
+        dispatch(deletePrevItem(position));
       }
-  
-    dispatch(deleteValue());
-  }
-  
-}
-setPosition(e.currentTarget.selectionStart);
-   
-    
+      if (e.code === "Delete") {
+        if (inputRef.current) {
+          console.log(inputRef.current);
+          inputRef.current.focus();
+        }
+
+        dispatch(deleteValue());
+      }
+    }
+    setPosition(e.currentTarget.selectionStart);
   };
  
-console.log(calculatorSlice);
-
-  console.log(position,'position');
+  const valueData = () => {
+    if (isConstructor) {
+      return "";
+    } else {
+      if (!isConstructorMode) {
+        if (showResult) {
+          return result;
+        } else {
+          return displayValue.join("");
+        }
+      } else {
+        return "";
+      }
+    }
+  };
   return (
     <CalculatorElementWrapper height={"60px"}>
       <DisplayStl
-    ref={inputRef}
+        ref={inputRef}
         disabled={isConstructor ? true : false}
         onChange={valueHandler}
         onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
           deleteValueHandler(e);
         }}
-         
-        value={
-          isConstructor
-            ? ""
-            : !isConstructorMode
-            ? showResult
-              ? result
-              : displayValue.join("")
-            : ""
-        }
+        value={valueData()}
         isConstructor={isConstructor}
         isConstructorMode={isConstructorMode}
       ></DisplayStl>

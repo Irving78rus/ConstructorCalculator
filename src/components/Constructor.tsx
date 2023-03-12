@@ -25,7 +25,7 @@ const Constructor = ({ setCurrentItems, isConstructorMode, usedElements, arrForR
 
   return (
     <>
-      {arrForRender.length !== 4 && <ConstructorWrapper>
+      {(arrForRender.length !== 4&&isConstructorMode) && <ConstructorWrapper>
         {usedElements.map((item: ConstructorBlock) => {
           const Component = item.elem
           return (
