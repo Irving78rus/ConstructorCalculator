@@ -1,5 +1,6 @@
 {
   "name": "calculator",
+  "homepage":  "https://irving78rus.github.io/ConstructorCalculator/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
